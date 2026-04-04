@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./src/Config/db.js";
 import seedDatabase from "./src/Config/seedDB.js";
+import userRoutes from "./src/Routes/userRoutes.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -14,12 +16,19 @@ startServer();
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
 // Middleware
 app.use(express.json());
 
 // Routes
-// import userRoutes from './routes/userRoutes.js';
-// app.use('/api/users', userRoutes);
+app.use("/api/users", userRoutes);
+
 
 // Health check
 app.get('/', (req, res) => {
