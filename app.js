@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import connectDB from "./src/Config/db.js";
 import seedDatabase from "./src/Config/seedDB.js";
 import userRoutes from "./src/Routes/userRoutes.js";
+import donorRoutes from "./src/Routes/donorRoutes.js";
+import donationRequestRoutes from "./src/Routes/donationRequestRoutes.js";
 import cors from "cors";
 
 dotenv.config();
@@ -28,6 +30,8 @@ app.use(express.json());
 
 // Routes
 app.use("/api/users", userRoutes);
+app.use("/api/donors", donorRoutes);
+app.use("/api/donation-requests", donationRequestRoutes);
 
 
 // Health check

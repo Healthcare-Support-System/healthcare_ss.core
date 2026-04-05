@@ -1,4 +1,6 @@
 import User from "../Models/userModel.js";
+import Donor from "../Models/donorModel.js";
+import Staff from "../Models/staffModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -21,7 +23,21 @@ export const loginUser = async (email, password) => {
     { expiresIn: "1d" }
   );
 
-  return { user, token };
+  let profile = null;
+
+  if (user.role === "donor") {
+    profile = await Donor.findOne({ user_id: user._id });
+  } else if (user.role === "admin" || user.role === "social_worker") {
+    profile = await Staff.findOne({ user_id: user._id });
+  }
+
+  return {
+    user: {
+      ...user.toObject(),
+      profile
+    },
+    token
+  };
 };
 
 export const getAllUsers = async () => {
