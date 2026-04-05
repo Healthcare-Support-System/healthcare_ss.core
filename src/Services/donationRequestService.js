@@ -48,3 +48,72 @@ export const deleteRequest = async (id) => {
 
   return await DonationRequest.findByIdAndDelete(id);
 };
+
+// GENERATE UNIQUE REFERENCE CODE
+const generateReferenceCode = () => {
+  const randomPart = Math.floor(100000 + Math.random() * 900000);
+  return `REF-${randomPart}`;
+};
+
+// ACCEPT REQUEST
+export const acceptRequest = async (id, staffId) => {
+  const request = await DonationRequest.findById(id);
+
+  if (!request) {
+    throw new Error("Request not found");
+  }
+
+  if (request.status !== "pending") {
+    throw new Error("Only pending requests can be accepted");
+  }
+
+  let referenceCode;
+  let exists = true;
+
+  while (exists) {
+    referenceCode = generateReferenceCode();
+
+    const existingRequest = await DonationRequest.findOne({
+      reference_code: referenceCode,
+    });
+
+    if (!existingRequest) {
+      exists = false;
+    }
+  }
+
+  request.status = "accepted";
+  request.reference_code = referenceCode;
+  request.accepted_by = staffId;
+  request.accepted_at = new Date();
+
+  return await request.save();
+};
+
+
+//GET ALL DONATION REQUEST
+export const getAllRequests = async () => {
+  return await DonationRequest.find()
+    .populate("donor_id")
+    .populate("request_id")
+    .sort({ created_at: -1 });
+};
+
+//REJECT DONATION REQUESTS
+export const rejectRequest = async (id, staffId) => {
+  const request = await DonationRequest.findById(id);
+
+  if (!request) {
+    throw new Error("Request not found");
+  }
+
+  if (request.status !== "pending") {
+    throw new Error("Only pending requests can be rejected");
+  }
+
+  request.status = "rejected";
+  request.accepted_by = staffId;
+  request.accepted_at = new Date();
+
+  return await request.save();
+};
