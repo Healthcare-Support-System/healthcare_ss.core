@@ -12,7 +12,6 @@ class SupportRequestDTO {
     this.needed_date = supportRequest.needed_date;
     this.created_at = supportRequest.created_at;
 
-    // ✅ Patient info WITHOUT identity
     this.patient = patient
       ? {
           age: patient.dob ? this.calculateAge(patient.dob) : null,
@@ -24,7 +23,7 @@ class SupportRequestDTO {
     this.created_by = staff
       ? {
           id: staff._id,
-          name: staff.full_name || staff.name || null,
+          name: staff.full_name || null,
         }
       : null;
   }
