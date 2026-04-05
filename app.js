@@ -3,12 +3,9 @@ import dotenv from "dotenv";
 import connectDB from "./src/Config/db.js";
 import seedDatabase from "./src/Config/seedDB.js";
 import userRoutes from "./src/Routes/userRoutes.js";
-<<<<<<< HEAD
 import supportRequestRoutes from "./src/Routes/supportRequestRoutes.js";
-=======
 import donorRoutes from "./src/Routes/donorRoutes.js";
 import donationRequestRoutes from "./src/Routes/donationRequestRoutes.js";
->>>>>>> origin/main
 import cors from "cors";
 
 dotenv.config();
