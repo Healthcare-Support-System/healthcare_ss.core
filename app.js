@@ -3,7 +3,10 @@ import dotenv from "dotenv";
 import connectDB from "./src/Config/db.js";
 import seedDatabase from "./src/Config/seedDB.js";
 import userRoutes from "./src/Routes/userRoutes.js";
+import patientRoutes from "./src/Routes/patientRoutes.js";
 import cors from "cors";
+import path from "path";
+
 
 dotenv.config();
 
@@ -26,8 +29,12 @@ app.use(
 // Middleware
 app.use(express.json());
 
+// Static folder for uploaded PDFs
+app.use("./src/Uploads", express.static(path.resolve("./src/Uploads")));
+
 // Routes
 app.use("/api/users", userRoutes);
+app.use("/api/patients", patientRoutes);
 
 
 // Health check
