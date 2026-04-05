@@ -33,7 +33,7 @@ app.use(
 app.use(express.json());
 
 // Static folder for uploaded PDFs
-app.use("./src/Uploads", express.static(path.resolve("./src/Uploads")));
+app.use("/src/Uploads", express.static(path.resolve("src/Uploads")));
 
 // Routes
 app.use("/api/users", userRoutes);
