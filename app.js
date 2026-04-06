@@ -7,6 +7,7 @@ import patientRoutes from "./src/Routes/patientRoutes.js";
 import supportRequestRoutes from "./src/Routes/supportRequestRoutes.js";
 import donorRoutes from "./src/Routes/donorRoutes.js";
 import donationRequestRoutes from "./src/Routes/donationRequestRoutes.js";
+import donationRoutes from "./src/Routes/donationsRoutes.js";
 import cors from "cors";
 import path from "path";
 
@@ -41,6 +42,7 @@ app.use("/api/patients", patientRoutes);
 app.use("/api/support-requests", supportRequestRoutes);
 app.use("/api/donors", donorRoutes);
 app.use("/api/donation-requests", donationRequestRoutes);
+app.use("/api/donations", donationRoutes);
 
 
 // Health check

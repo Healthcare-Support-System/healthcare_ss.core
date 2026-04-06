@@ -19,7 +19,8 @@ const donationSchema = new mongoose.Schema({
   received_items: [receivedItemSchema],
   donation_status: {
     type: String,
-    enum: ["received", "stored", "allocated"]
+     enum: ["received", "allocated", "used", "completed"],
+     default: "received"
   },
   remarks: { type: String },
   created_at: { type: Date, default: Date.now }

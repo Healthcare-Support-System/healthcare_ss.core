@@ -158,20 +158,20 @@ const seedDatabase = async () => {
     }
 
     // --- Seed Donation Usage ---
-    let donationUsage = await DonationUsage.findOne();
-    if (!donationUsage) {
-      const socialWorker = await Staff.findOne({ staff_type: "social_worker" });
-      await DonationUsage.create({
-        donation_id: donation._id,
-        request_id: supportRequest._id,
-        patient_id: patient._id,
-        allocated_by: socialWorker._id,
-        used_date: new Date(),
-        usage_status: "allocated",
-        remarks: "Allocated to patient"
-      });
+    //let donationUsage = await DonationUsage.findOne();
+    //if (!donationUsage) {
+      //const socialWorker = await Staff.findOne({ staff_type: "social_worker" });
+      //await DonationUsage.create({
+        //donation_id: donation._id,
+        //request_id: supportRequest._id,
+        //patient_id: patient._id,
+        //allocated_by: socialWorker._id,
+        //used_date: new Date(),
+        //usage_status: "allocated",
+        //remarks: "Allocated to patient"
+      //});
       //console.log("Donation Usage Created");
-    }
+    //}
 
     console.log("Database Seeding Completed Successfully!");
   } catch (error) {
