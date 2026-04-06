@@ -5,6 +5,11 @@ import {
   updateDonorProfileByUserId
 } from "../Services/donorProfileService.js";
 
+const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const sriLankaPhoneRegex = /^07\d{8}$/;
+const sriLankaNicRegex = /^(?:\d{9}[VvXx]|\d{12})$/;
+
 export const getDonorProfile = async (req, res) => {
   try {
     const donor = await getDonorProfileByUserId(req.user.id);
@@ -24,17 +29,44 @@ export const updateDonorProfile = async (req, res) => {
   try {
     const { email, first_name, last_name, nic, phone, address } = req.body;
 
-    if (phone && !/^07\d{8}$/.test(phone)) {
+    const trimmedEmail = email?.trim();
+    const trimmedFirstName = first_name?.trim();
+    const trimmedLastName = last_name?.trim();
+    const trimmedNic = nic?.trim();
+    const trimmedPhone = phone?.trim();
+    const trimmedAddress = address?.trim();
+
+    if (trimmedFirstName !== undefined && !nameRegex.test(trimmedFirstName)) {
+      return res.status(400).json({
+        message: "First name can only contain letters and spaces"
+      });
+    }
+
+    if (trimmedLastName !== undefined && !nameRegex.test(trimmedLastName)) {
+      return res.status(400).json({
+        message: "Last name can only contain letters and spaces"
+      });
+    }
+
+    if (trimmedEmail !== undefined && !emailRegex.test(trimmedEmail)) {
+      return res.status(400).json({ message: "Invalid email address" });
+    }
+
+    if (trimmedNic !== undefined && !sriLankaNicRegex.test(trimmedNic)) {
+      return res.status(400).json({ message: "Invalid NIC number" });
+    }
+
+    if (trimmedPhone !== undefined && !sriLankaPhoneRegex.test(trimmedPhone)) {
       return res.status(400).json({ message: "Invalid phone number" });
     }
 
     const donor = await updateDonorProfileByUserId(req.user.id, {
-      email,
-      first_name,
-      last_name,
-      nic,
-      phone,
-      address
+      email: trimmedEmail,
+      first_name: trimmedFirstName,
+      last_name: trimmedLastName,
+      nic: trimmedNic,
+      phone: trimmedPhone,
+      address: trimmedAddress
     });
 
     res.status(200).json({

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const donationRequestSchema = new mongoose.Schema({
   donor_id: { type: mongoose.Schema.Types.ObjectId, ref: "Donor", required: true },
   request_id: { type: mongoose.Schema.Types.ObjectId, ref: "SupportRequest", required: true },
+  phone: { type: String, required: true },
   message: { type: String },
   status: {
     type: String,

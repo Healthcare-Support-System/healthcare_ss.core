@@ -4,10 +4,17 @@ import Staff from "../Models/staffModel.js";
 // CREATE
 export const createDonationRequest = async (req, res) => {
   try {
+    const { donor_id, request_id, message, phone } = req.body;
+
+    if (!phone || !phone.trim()) {
+      return res.status(400).json({ message: "Phone number is required" });
+    }
+
     const data = {
-      donor_id: req.body.donor_id,
-      request_id: req.body.request_id,
-      message: req.body.message
+      donor_id,
+      request_id,
+      message,
+      phone: phone.trim()
     };
 
     const result = await donationService.createRequest(data);
