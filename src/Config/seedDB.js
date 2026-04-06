@@ -128,6 +128,7 @@ const seedDatabase = async () => {
       donationRequest = await DonationRequest.create({
         donor_id: donorProfile._id,
         request_id: supportRequest._id,
+        phone: donorProfile.phone,
         message: "Happy to help!",
         status: "pending"
       });

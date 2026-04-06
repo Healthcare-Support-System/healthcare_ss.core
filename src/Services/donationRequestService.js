@@ -29,7 +29,26 @@ export const updateRequest = async (id, updateData) => {
     throw new Error("Cannot update after approval");
   }
 
-  request.message = updateData.message;
+  const hasMessage = Object.prototype.hasOwnProperty.call(updateData, "message");
+  const hasPhone = Object.prototype.hasOwnProperty.call(updateData, "phone");
+
+  if (!hasMessage && !hasPhone) {
+    throw new Error("No valid fields provided for update");
+  }
+
+  if (hasMessage) {
+    request.message = updateData.message;
+  }
+
+  if (hasPhone) {
+    const trimmedPhone = String(updateData.phone).trim();
+
+    if (!/^07\d{8}$/.test(trimmedPhone)) {
+      throw new Error("Invalid phone number");
+    }
+
+    request.phone = trimmedPhone;
+  }
 
   return await request.save();
 };
