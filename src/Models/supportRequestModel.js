@@ -14,7 +14,12 @@ const supportRequestSchema = new mongoose.Schema({
   description: { type: String },
   items: [itemSchema],
   urgency_level: { type: String },
-  status: { type: String },
+  
+  status: {
+  type: String,
+  enum: ["open", "pending", "fulfilled", "closed"],
+  default: "open"
+},
   needed_date: { type: Date },
   created_at: { type: Date, default: Date.now }
 });

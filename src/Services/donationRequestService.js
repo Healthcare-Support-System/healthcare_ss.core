@@ -1,8 +1,27 @@
 import DonationRequest from "../Models/donationRequestModel.js";
+import SupportRequest from "../Models/supportRequestModel.js";
+
 
 // CREATE REQUEST
 export const createRequest = async (data) => {
-  return await DonationRequest.create(data);
+  const supportRequest = await SupportRequest.findById(data.request_id);
+
+  if (!supportRequest) {
+    throw new Error("Support request not found");
+  }
+
+  if (supportRequest.status !== "open") {
+    throw new Error("This support request is no longer available for donation");
+  }
+
+  const donationRequest = await DonationRequest.create(data);
+
+  await SupportRequest.findByIdAndUpdate(
+    data.request_id,
+    { status: "pending" }
+  );
+
+  return donationRequest;
 };
 
 // GET ALL REQUESTS BY DONOR
@@ -65,7 +84,23 @@ export const deleteRequest = async (id) => {
     throw new Error("Cannot delete after approval");
   }
 
-  return await DonationRequest.findByIdAndDelete(id);
+  const supportRequestId = request.request_id;
+
+  await DonationRequest.findByIdAndDelete(id);
+
+  const existingActiveRequest = await DonationRequest.findOne({
+    request_id: supportRequestId,
+    status: { $in: ["pending", "accepted"] }
+  });
+
+  if (!existingActiveRequest) {
+    await SupportRequest.findByIdAndUpdate(
+      supportRequestId,
+      { status: "open" }
+    );
+  }
+
+  return true;
 };
 
 // GENERATE UNIQUE REFERENCE CODE
