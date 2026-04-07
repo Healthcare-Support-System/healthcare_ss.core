@@ -49,6 +49,51 @@ export const getPatientById = async (patientId) => {
   return patient;
 };
 
+// export const updatePatient = async (patientId, updateData, files, baseUrl) => {
+//   const patient = await Patient.findById(patientId);
+
+//   if (!patient) {
+//     throw new Error("Patient not found");
+//   }
+
+//   let documentUrls = patient.verification_documents || [];
+
+//   const shouldReplaceDocuments =
+//     updateData.replace_documents === "true" ||
+//     updateData.replace_documents === true;
+
+//   if (files && files.length > 0) {
+//     const newUrls = files.map(
+//       (file) => `${baseUrl}/src/Uploads/${file.filename}`
+//     );
+
+//     if (shouldReplaceDocuments) {
+//       deleteMultipleFilesByUrls(documentUrls);
+//       documentUrls = newUrls;
+//     } else {
+//       documentUrls = [...documentUrls, ...newUrls];
+//     }
+//   }
+
+//   patient.full_name = updateData.full_name ?? patient.full_name;
+//   patient.dob = updateData.dob ?? patient.dob;
+//   patient.gender = updateData.gender ?? patient.gender;
+//   patient.address = updateData.address ?? patient.address;
+//   patient.contact_no = updateData.contact_no ?? patient.contact_no;
+//   patient.guardian_name = updateData.guardian_name ?? patient.guardian_name;
+//   patient.guardian_contact =
+//     updateData.guardian_contact ?? patient.guardian_contact;
+//   patient.medical_condition =
+//     updateData.medical_condition ?? patient.medical_condition;
+//   patient.verification_status =
+//     updateData.verification_status ?? patient.verification_status;
+//   patient.verification_documents = documentUrls;
+
+//   await patient.save();
+
+//   return patient;
+// };
+
 export const updatePatient = async (patientId, updateData, files, baseUrl) => {
   const patient = await Patient.findById(patientId);
 
@@ -62,17 +107,22 @@ export const updatePatient = async (patientId, updateData, files, baseUrl) => {
     updateData.replace_documents === "true" ||
     updateData.replace_documents === true;
 
-  if (files && files.length > 0) {
+  const hasNewFiles = files && files.length > 0;
+
+  if (shouldReplaceDocuments) {
+    // delete all old documents first
+    deleteMultipleFilesByUrls(documentUrls);
+
+    // if new files exist, save them, otherwise keep empty array
+    documentUrls = hasNewFiles
+      ? files.map((file) => `${baseUrl}/src/Uploads/${file.filename}`)
+      : [];
+  } else if (hasNewFiles) {
     const newUrls = files.map(
       (file) => `${baseUrl}/src/Uploads/${file.filename}`
     );
 
-    if (shouldReplaceDocuments) {
-      deleteMultipleFilesByUrls(documentUrls);
-      documentUrls = newUrls;
-    } else {
-      documentUrls = [...documentUrls, ...newUrls];
-    }
+    documentUrls = [...documentUrls, ...newUrls];
   }
 
   patient.full_name = updateData.full_name ?? patient.full_name;
