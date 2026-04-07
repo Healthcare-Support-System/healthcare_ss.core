@@ -125,6 +125,14 @@ export const updateDonationStatus = async (donationId, status) => {
   donation.donation_status = status;
   await donation.save();
 
+  // 🔥 IMPORTANT: update support request when donation is allocated
+  if (status === "allocated") {
+  await SupportRequest.findByIdAndUpdate(
+    donation.request_id,
+    { status: "fulfilled" }
+  );
+}
+
   const updatedDonation = await Donation.findById(donationId)
     .populate("donation_request_id")
     .populate("request_id")
