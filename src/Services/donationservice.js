@@ -5,7 +5,7 @@ import SupportRequest from "../Models/supportRequestModel.js";
 export const findDonationRequestByReferenceCode = async (referenceCode) => {
   const donationRequest = await DonationRequest.findOne({
     reference_code: referenceCode,
-    status: "accepted"
+    status: "accepted",
   })
     .populate("request_id")
     .populate("donor_id");
@@ -20,7 +20,7 @@ export const findDonationRequestByReferenceCode = async (referenceCode) => {
 export const createDonationRecord = async (data, staffId) => {
   const donationRequest = await DonationRequest.findOne({
     reference_code: data.reference_code,
-    status: "accepted"
+    status: "accepted",
   });
 
   if (!donationRequest) {
@@ -28,14 +28,16 @@ export const createDonationRecord = async (data, staffId) => {
   }
 
   const existingDonation = await Donation.findOne({
-    donation_request_id: donationRequest._id
+    donation_request_id: donationRequest._id,
   });
 
   if (existingDonation) {
     throw new Error("This donation has already been recorded");
   }
 
-  const supportRequest = await SupportRequest.findById(donationRequest.request_id);
+  const supportRequest = await SupportRequest.findById(
+    donationRequest.request_id,
+  );
 
   if (!supportRequest) {
     throw new Error("Related support request not found");
@@ -52,12 +54,14 @@ export const createDonationRecord = async (data, staffId) => {
     donation_type: data.donation_type || "item",
     received_items: data.received_items || [],
     donation_status: "received",
-    remarks: data.remarks || ""
+    remarks: data.remarks || "",
+  });
+  await SupportRequest.findByIdAndUpdate(donation.request_id, {
+    status: "fulfilled",
   });
 
   return donation;
 };
-
 
 // // CREATE DONATION
 // export const createDonation = async (req, res) => {
@@ -107,8 +111,6 @@ export const deleteDonation = async (donationId) => {
   return donation;
 };
 
-
-
 export const updateDonationStatus = async (donationId, status) => {
   const allowedStatuses = ["allocated", "used", "completed"];
 
@@ -125,13 +127,12 @@ export const updateDonationStatus = async (donationId, status) => {
   donation.donation_status = status;
   await donation.save();
 
-  // 🔥 IMPORTANT: update support request when donation is allocated
-  if (status === "allocated") {
-  await SupportRequest.findByIdAndUpdate(
-    donation.request_id,
-    { status: "fulfilled" }
-  );
-}
+  // // 🔥 IMPORTANT: update support request when donation is allocated
+  // if (status === "allocated") {
+  //   await SupportRequest.findByIdAndUpdate(donation.request_id, {
+  //     status: "fulfilled",
+  //   });
+  // }
 
   const updatedDonation = await Donation.findById(donationId)
     .populate("donation_request_id")
