@@ -153,7 +153,6 @@ export const getAllRequests = async () => {
     .sort({ created_at: -1 });
 };
 
-//REJECT DONATION REQUESTS
 export const rejectRequest = async (id, staffId) => {
   const request = await DonationRequest.findById(id);
 
@@ -169,5 +168,13 @@ export const rejectRequest = async (id, staffId) => {
   request.accepted_by = staffId;
   request.accepted_at = new Date();
 
-  return await request.save();
+  const savedRequest = await request.save();
+
+  await SupportRequest.findByIdAndUpdate(
+    request.request_id,
+    { status: "open" }
+  );
+
+  return savedRequest;
 };
+
