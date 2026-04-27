@@ -1,7 +1,6 @@
 import DonationRequest from "../Models/donationRequestModel.js";
 import SupportRequest from "../Models/supportRequestModel.js";
 
-
 // CREATE REQUEST
 export const createRequest = async (data) => {
   const supportRequest = await SupportRequest.findById(data.request_id);
@@ -16,10 +15,9 @@ export const createRequest = async (data) => {
 
   const donationRequest = await DonationRequest.create(data);
 
-  await SupportRequest.findByIdAndUpdate(
-    data.request_id,
-    { status: "pending" }
-  );
+  await SupportRequest.findByIdAndUpdate(data.request_id, {
+    status: "pending",
+  });
 
   return donationRequest;
 };
@@ -48,7 +46,10 @@ export const updateRequest = async (id, updateData) => {
     throw new Error("Cannot update after approval");
   }
 
-  const hasMessage = Object.prototype.hasOwnProperty.call(updateData, "message");
+  const hasMessage = Object.prototype.hasOwnProperty.call(
+    updateData,
+    "message",
+  );
   const hasPhone = Object.prototype.hasOwnProperty.call(updateData, "phone");
 
   if (!hasMessage && !hasPhone) {
@@ -90,14 +91,13 @@ export const deleteRequest = async (id) => {
 
   const existingActiveRequest = await DonationRequest.findOne({
     request_id: supportRequestId,
-    status: { $in: ["pending", "accepted"] }
+    status: { $in: ["pending", "accepted"] },
   });
 
   if (!existingActiveRequest) {
-    await SupportRequest.findByIdAndUpdate(
-      supportRequestId,
-      { status: "open" }
-    );
+    await SupportRequest.findByIdAndUpdate(supportRequestId, {
+      status: "open",
+    });
   }
 
   return true;
@@ -141,9 +141,14 @@ export const acceptRequest = async (id, staffId) => {
   request.accepted_by = staffId;
   request.accepted_at = new Date();
 
-  return await request.save();
-};
+  await request.save();
 
+  await SupportRequest.findByIdAndUpdate(request.request_id, {
+    status: "pending",
+  });
+
+  return request;
+};
 
 //GET ALL DONATION REQUEST
 export const getAllRequests = async () => {
@@ -177,4 +182,6 @@ export const rejectRequest = async (id, staffId) => {
 
   return savedRequest;
 };
+
+
 

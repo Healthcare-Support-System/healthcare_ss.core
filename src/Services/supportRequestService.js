@@ -17,7 +17,7 @@ class SupportRequestService {
       description: data.description || "",
       items: data.items || [],
       urgency_level: data.urgency_level || "",
-      status: data.status || "",
+      status: data.status || "open",
       needed_date: data.needed_date || null,
     });
 
