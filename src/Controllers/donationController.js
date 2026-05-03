@@ -1,5 +1,6 @@
 import * as donationService from "../Services/donationservice.js";
 import Staff from "../Models/staffModel.js";
+import Donor from "../Models/donorModel.js";
 import SupportRequest from "../Models/supportRequestModel.js";
 
 export const getDonationRequestByReferenceCode = async (req, res) => {
@@ -46,6 +47,32 @@ export const createDonation = async (req, res) => {
 export const getAllDonations = async (req, res) => {
   try {
     const donations = await donationService.getAllDonations();
+
+    res.status(200).json({
+      data: donations
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getDonationsByDonor = async (req, res) => {
+  try {
+    const { donorId } = req.params;
+
+    if (req.user.role === "donor") {
+      const donor = await Donor.findOne({ user_id: req.user.id });
+
+      if (!donor) {
+        return res.status(404).json({ message: "Donor profile not found" });
+      }
+
+      if (String(donor._id) !== String(donorId)) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+    }
+
+    const donations = await donationService.getDonationsByDonor(donorId);
 
     res.status(200).json({
       data: donations
