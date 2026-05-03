@@ -99,6 +99,18 @@ export const getAllDonations = async () => {
   return donations;
 };
 
+export const getDonationsByDonor = async (donorId) => {
+  const donations = await Donation.find({ donor_id: donorId })
+    .populate("donation_request_id")
+    .populate("request_id")
+    .populate("patient_id")
+    .populate("donor_id")
+    .populate("received_by")
+    .sort({ created_at: -1 });
+
+  return donations;
+};
+
 export const deleteDonation = async (donationId) => {
   const donation = await Donation.findById(donationId);
 

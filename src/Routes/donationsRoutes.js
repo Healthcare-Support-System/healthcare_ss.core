@@ -4,6 +4,7 @@ import {
   getDonationRequestByReferenceCode,
   createDonation,
   getAllDonations,
+  getDonationsByDonor,
   deleteDonation,
   updateDonationStatus
 } from "../Controllers/donationController.js";
@@ -29,6 +30,13 @@ router.get(
   protect,
   authorizeRoles("admin", "social_worker"),
   getAllDonations
+);
+
+router.get(
+  "/donor/:donorId",
+  protect,
+  authorizeRoles("donor", "admin", "social_worker"),
+  getDonationsByDonor
 );
 
 router.delete(
