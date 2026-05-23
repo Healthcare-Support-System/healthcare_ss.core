@@ -23,7 +23,8 @@ const donationSchema = new mongoose.Schema({
      default: "received"
   },
   remarks: { type: String },
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  seed_batch_id: { type: String, default: null }
 });
 
 const Donation = mongoose.model("Donation", donationSchema);

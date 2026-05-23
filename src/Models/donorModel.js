@@ -7,7 +7,10 @@ const donorSchema = new mongoose.Schema({
   nic: { type: String, required: true, unique: true },
   phone: { type: String },
   address: { type: String },
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  city: { type: String, default: null },
+  district: { type: String, default: null },
+  seed_batch_id: { type: String, default: null }
 });
 
 const Donor = mongoose.model("Donor", donorSchema);

@@ -8,6 +8,7 @@ import supportRequestRoutes from "./src/Routes/supportRequestRoutes.js";
 import donorRoutes from "./src/Routes/donorRoutes.js";
 import donationRequestRoutes from "./src/Routes/donationRequestRoutes.js";
 import donationRoutes from "./src/Routes/donationsRoutes.js";
+import analyticsRoutes from "./src/Routes/analyticsRoutes.js";
 import cors from "cors";
 import path from "path";
 
@@ -43,7 +44,7 @@ app.use("/api/support-requests", supportRequestRoutes);
 app.use("/api/donors", donorRoutes);
 app.use("/api/donation-requests", donationRequestRoutes);
 app.use("/api/donations", donationRoutes);
-
+app.use("/api/analytics", analyticsRoutes);
 
 // Health check
 app.get('/', (req, res) => {

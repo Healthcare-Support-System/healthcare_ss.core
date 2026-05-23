@@ -16,7 +16,11 @@ const patientSchema = new mongoose.Schema({
     default: "pending"
   },
   verification_documents: [{ type: String }],
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  district: { type: String, default: null },
+  city: { type: String, default: null },
+  cancer_type: { type: String, default: null },
+  seed_batch_id: { type: String, default: null }
 });
 
 const Patient = mongoose.model("Patient", patientSchema);
