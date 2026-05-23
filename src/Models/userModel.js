@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
     enum: ["donor", "social_worker", "admin"],
     required: true
   },
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  seed_batch_id: { type: String, default: null }
 });
 
 const User = mongoose.model("User", userSchema);

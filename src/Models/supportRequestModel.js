@@ -21,7 +21,8 @@ const supportRequestSchema = new mongoose.Schema({
   default: "open"
 },
   needed_date: { type: Date },
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  seed_batch_id: { type: String, default: null }
 });
 
 const SupportRequest = mongoose.model("SupportRequest", supportRequestSchema);

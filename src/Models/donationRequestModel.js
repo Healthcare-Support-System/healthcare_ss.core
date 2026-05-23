@@ -13,7 +13,8 @@ const donationRequestSchema = new mongoose.Schema({
   reference_code: { type: String },
   accepted_by: { type: mongoose.Schema.Types.ObjectId, ref: "Staff" },
   accepted_at: { type: Date },
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  seed_batch_id: { type: String, default: null }
 });
 
 const DonationRequest = mongoose.model("DonationRequest", donationRequestSchema);
